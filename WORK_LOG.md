@@ -1,9 +1,9 @@
 Name: Sohum Berry
 
-| Date    |    Time     |                                                                                                                                                                                                           Update |
-|:--------|:-----------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| 12/3/24 | 11:15-11:55 | I sort of mapped out what I'm planning to do, then I started to try to do it. It is really not looking great so far, everything is really messy, I think I'm going to try to get the words a little differently. |
-|         |             |                                                                                                                                                                                                                  |
+| Date    |     Time      |                                                                                                                                                                                                                                                                                                                                                                                         Update |
+|:--------|:-------------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| 12/3/24 | 11:15-11:55am |                                                                                                                                                                               I sort of mapped out what I'm planning to do, then I started to try to do it. It is really not looking great so far, everything is really messy, I think I'm going to try to get the words a little differently. |
+| 12/3/24 |  8:35-9:20pm  | I tried fiddling around with the SpellingBee code I imported into this to get each word, but it didn't really result in anything. Then I realized I didn't have to do it recursively, so I found out the length of the longest common word and I'm planning on checking into the next 1-10 letters to compare to a common word. It's going to be really slow, but I think it will work better. |
 
 
 To add a new row to the table, click into a cell and then hit shift-enter.

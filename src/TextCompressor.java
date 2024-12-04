@@ -71,7 +71,21 @@ public class TextCompressor {
         System.out.println(commonWords.length);
 
         String input = BinaryStdIn.readString();
-        makeWord(input, "");
+
+        int pos = 0;
+
+        for (int i = 0; i < input.length() - 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                int code = getSubstringCode(commonWords, input.substring(i, j));
+                if (code != commonWords.length) {
+
+                }
+            }
+        }
+
+        for (int i = 0; i < commonWords.length; i++) {
+
+        }
 
         // TODO: Complete the compress() method
 
@@ -86,19 +100,6 @@ public class TextCompressor {
             }
         }
         return commonWords.length;
-    }
-
-    // From my SpellingBee code
-    // Recursively generating every combination of the given letters
-    private static void makeWord(String input, String creation) throws IOException {
-        for (int i = 0; i < (input.isEmpty() ? 1 : input.length()); i++) {
-            FileWriter myWriter = new FileWriter("words.txt");
-            if (!creation.isEmpty())
-                myWriter.write(creation);
-            if (input.isEmpty()) return;
-            myWriter.close();
-            makeWord(input.substring(0, i) + input.substring(i+1), creation + input.charAt(i));
-        }
     }
 
     private static void expand() {
