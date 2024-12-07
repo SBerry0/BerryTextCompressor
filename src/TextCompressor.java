@@ -42,49 +42,27 @@ public class TextCompressor {
     }
 
     private static void compress() throws IOException {
-        /**
-         * ok here's the plan:
-         * z = number of bits that will be used for the codes
-         *Compression:
-         * 1. Go through the input string and search for the most common substrings in it
-         *         First I'm going to check for most common of a certain length like 3 or 4
-         *         Then later I can make it search for the lengths from 2 to like 10
-         *         and calculate the top x of them by multiplying their frequency by their length
-         * 2. Assign the top z-2 of the frequent words to a z length bit in a map, then write it as a header (saving this for later, gonna get later steps to work first
-         * 3. Start writing each character by character with 8 bits, leave something like 1111 1111 as an
-         *      escape character that will be written when a substring that is in the map is detected
-         * 4. When finished writing out a code, write an escape character like 1111111111
-         *
-         * Expansion:
-         * 1. Read in the map into an object
-         * 2. Start with assuming it's a real word until you hit escape character, then write out codes based on the map
-         */
-
-        Scanner s = new Scanner(new File("common.txt"));
-        s.useDelimiter("\\n");
-        String commonWordsString = "";
-        while (s.hasNext()) {
-            commonWordsString += s.next();
-            commonWordsString += "\n";
-        }
-        String[] commonWords = commonWordsString.split("\n");
-        System.out.println(commonWords.length);
-
         String input = BinaryStdIn.readString();
 
-        int pos = 0;
+        int codeBits = 12;
+        String prefix = input.charAt(0) + "";
 
-        for (int i = 0; i < input.length() - 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                int code = getSubstringCode(commonWords, input.substring(i, j));
-                if (code != commonWords.length) {
+        TST codes = new TST();
+        int codeIndex = 129;
+        int i = 0;
 
+        while (i < input.length()) {
+            if (prefix.length() == 1) {
+                BinaryStdOut.write(prefix, codeBits);
+                codes.insert(prefix+input.charAt(++i), codeIndex++);
+            }
+            else {
+                int location = codes.lookup(prefix);
+                if (location != -1) {
+                    BinaryStdOut.write(location, codeBits);
+                    codes.insert(prefix+input.charAt(++i), codeIndex++);
                 }
             }
-        }
-
-        for (int i = 0; i < commonWords.length; i++) {
-
         }
 
         // TODO: Complete the compress() method
