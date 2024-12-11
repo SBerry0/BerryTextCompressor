@@ -47,40 +47,48 @@ public class TextCompressor {
         int CODE_BITS = 12;
 
         TST codes = new TST();
+        codes.print();
         int codeIndex = 257;
         int i = 0;
         String prefix = input.charAt(0) + "";
 
         while (i < input.length()) {
-            String longestPrefix = codes.getLongestPrefix(prefix+input.charAt(i+1));
+            prefix = codes.getLongestPrefix(input, i+1);
+            System.out.println(prefix);
             int lookaheadCode = codes.lookup(prefix+input.charAt(i+1));
             // If the lookahead prefix doesn't appear in the codes
-            if (longestPrefix.isEmpty()) {
-                BinaryStdOut.write(prefix, CODE_BITS);
-                codes.insert(prefix+input.charAt(++i), codeIndex++);
-            } else {
-                prefix += input.charAt(++i);
-                BinaryStdOut.write(prefix, CODE_BITS);
-                codes.insert(prefix+input.charAt(++i), codeIndex++);
-            }
-            int location = codes.lookup(prefix);
+//            prefix += input.charAt(++i);
+            BinaryStdOut.write(prefix, CODE_BITS);
+            i+=prefix.length();
+            codes.insert(prefix+input.charAt(i), codeIndex++);
+//            if (prefix.isEmpty()) {
+//                BinaryStdOut.write(prefix, CODE_BITS);
+//                i+=prefix.length();
+//                codes.insert(prefix+input.charAt(i), codeIndex++);
+////                prefix = input.charAt(i)+"";
+//            } else {
+//
+////                prefix = input
+//            }
+//            int location = codes.lookup(prefix);
 
 
 
 
 
-            if (prefix.length() == 1) {
-                BinaryStdOut.write(prefix, CODE_BITS);
-                codes.insert(prefix+input.charAt(++i), codeIndex++);
-            }
-            else {
-                if (location != -1) {
-                    BinaryStdOut.write(location, CODE_BITS);
-                    codes.insert(prefix+input.charAt(++i), codeIndex++);
-                }
-            }
+//            if (prefix.length() == 1) {
+//                BinaryStdOut.write(prefix, CODE_BITS);
+//                codes.insert(prefix+input.charAt(++i), codeIndex++);
+//            }
+//            else {
+//                if (location != -1) {
+//                    BinaryStdOut.write(location, CODE_BITS);
+//                    codes.insert(prefix+input.charAt(++i), codeIndex++);
+//                }
+//            }
         }
 
+        codes.print();
         // TODO: Complete the compress() method
 
         BinaryStdOut.close();
