@@ -44,22 +44,38 @@ public class TextCompressor {
     private static void compress() throws IOException {
         String input = BinaryStdIn.readString();
 
-        int codeBits = 12;
-        String prefix = input.charAt(0) + "";
+        int CODE_BITS = 12;
 
         TST codes = new TST();
-        int codeIndex = 129;
+        int codeIndex = 257;
         int i = 0;
+        String prefix = input.charAt(0) + "";
 
         while (i < input.length()) {
+            String longestPrefix = codes.getLongestPrefix(prefix+input.charAt(i+1));
+            int lookaheadCode = codes.lookup(prefix+input.charAt(i+1));
+            // If the lookahead prefix doesn't appear in the codes
+            if (longestPrefix.isEmpty()) {
+                BinaryStdOut.write(prefix, CODE_BITS);
+                codes.insert(prefix+input.charAt(++i), codeIndex++);
+            } else {
+                prefix += input.charAt(++i);
+                BinaryStdOut.write(prefix, CODE_BITS);
+                codes.insert(prefix+input.charAt(++i), codeIndex++);
+            }
+            int location = codes.lookup(prefix);
+
+
+
+
+
             if (prefix.length() == 1) {
-                BinaryStdOut.write(prefix, codeBits);
+                BinaryStdOut.write(prefix, CODE_BITS);
                 codes.insert(prefix+input.charAt(++i), codeIndex++);
             }
             else {
-                int location = codes.lookup(prefix);
                 if (location != -1) {
-                    BinaryStdOut.write(location, codeBits);
+                    BinaryStdOut.write(location, CODE_BITS);
                     codes.insert(prefix+input.charAt(++i), codeIndex++);
                 }
             }
@@ -68,16 +84,6 @@ public class TextCompressor {
         // TODO: Complete the compress() method
 
         BinaryStdOut.close();
-    }
-
-    private static int getSubstringCode(String[] commonWords, String word) {
-        // wow this is gonna be slow
-        for (int i = 0; i < commonWords.length; i++) {
-            if (commonWords[i].equals(word)) {
-                return i;
-            }
-        }
-        return commonWords.length;
     }
 
     private static void expand() {
