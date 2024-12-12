@@ -70,33 +70,33 @@ public class TextCompressor {
     private static void expand() {
         // Like decode and codes...get it?
         String[] decodes = new String[(int) Math.pow(2, CODE_BITS)];
+        // Fill map with extended ascii characters
         for (int i = 0; i < 256; i++) {
             decodes[i] = (char) (i) + "";
         }
+
         int value = BinaryStdIn.readInt(CODE_BITS);
         int codeIndex = EOF+1;
         int maxCodeIndex = (int) Math.pow(2, CODE_BITS);
 
+        // While the end of file isn't reached...
         while (value != EOF) {
+            // Write out the word that is associated with the read value
             BinaryStdOut.write(decodes[value]);
 
+            // Read in the lookahead code and find its corresponding word
             int newVal = BinaryStdIn.readInt(CODE_BITS);
-            String s = decodes[newVal];
-            for (int i = 129; i < 320; i++) {
-                System.out.println(decodes[i] + " - " + (i));
+            String newWord = decodes[newVal];
+            // Solve for tricky edge case where the new word reads as null
+            if (newWord == null) {
+                newWord = decodes[value] + decodes[value].charAt(0);
             }
-//            System.out.println(newVal + " " + s + " " + decodes[newVal-1]);
-            if (s == null) {
-                break;
-            }
+            // If there are still codes to make, add the next code to the map
             if (codeIndex < maxCodeIndex)
-                decodes[codeIndex++] = decodes[value] + s.charAt(0);
-//            System.out.println(value + " " + decodes[value] + " " + newVal + " " + decodes[value] + s.charAt(0));
-//            System.out.println("------------");
-
+                decodes[codeIndex++] = decodes[value] + newWord.charAt(0);
+            // Increment the value
             value = newVal;
         }
-
         BinaryStdOut.close();
     }
 
