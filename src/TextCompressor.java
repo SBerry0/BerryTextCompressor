@@ -21,76 +21,37 @@
  *  = 43.54% compression ratio!
  ******************************************************************************/
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  *  The {@code TextCompressor} class provides static methods for compressing
  *  and expanding natural language through textfile input.
  *
- *  @author Zach Blick, YOUR NAME HERE
+ *  @author Zach Blick, Sohum Berry
  */
 public class TextCompressor {
-    private ArrayList<String> words;
+    public static final int CODE_BITS = 12,
+                            EOF = 256;
 
-    public TextCompressor() {
-        this.words = new ArrayList<>();
-    }
-
-    private static void compress() throws IOException {
+    private static void compress() {
         String input = BinaryStdIn.readString();
 
-        int CODE_BITS = 12;
-
         TST codes = new TST();
-        codes.print();
-        int codeIndex = 257;
+
+        int codeIndex = EOF+1;
         int i = 0;
-        String prefix = input.charAt(0) + "";
+        String prefix;
 
         while (i < input.length()) {
-            prefix = codes.getLongestPrefix(input, i+1);
-            System.out.println(prefix);
-            int lookaheadCode = codes.lookup(prefix+input.charAt(i+1));
+            prefix = codes.getLongestPrefix(input, i);
             // If the lookahead prefix doesn't appear in the codes
-//            prefix += input.charAt(++i);
-            BinaryStdOut.write(prefix, CODE_BITS);
-            i+=prefix.length();
+            int code = codes.lookup(prefix);
+            BinaryStdOut.write(code, CODE_BITS);
+            i += prefix.length();
+            if (i >= input.length())
+                break;
             codes.insert(prefix+input.charAt(i), codeIndex++);
-//            if (prefix.isEmpty()) {
-//                BinaryStdOut.write(prefix, CODE_BITS);
-//                i+=prefix.length();
-//                codes.insert(prefix+input.charAt(i), codeIndex++);
-////                prefix = input.charAt(i)+"";
-//            } else {
-//
-////                prefix = input
-//            }
-//            int location = codes.lookup(prefix);
-
-
-
-
-
-//            if (prefix.length() == 1) {
-//                BinaryStdOut.write(prefix, CODE_BITS);
-//                codes.insert(prefix+input.charAt(++i), codeIndex++);
-//            }
-//            else {
-//                if (location != -1) {
-//                    BinaryStdOut.write(location, CODE_BITS);
-//                    codes.insert(prefix+input.charAt(++i), codeIndex++);
-//                }
-//            }
         }
-
-        codes.print();
-        // TODO: Complete the compress() method
-
+        BinaryStdOut.write(EOF, CODE_BITS);
         BinaryStdOut.close();
     }
 
@@ -101,7 +62,7 @@ public class TextCompressor {
         BinaryStdOut.close();
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         if      (args[0].equals("-")) compress();
         else if (args[0].equals("+")) expand();
         else throw new IllegalArgumentException("Illegal command line argument");
