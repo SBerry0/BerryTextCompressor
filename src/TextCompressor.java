@@ -42,22 +42,46 @@ public class TextCompressor {
         String prefix;
 
         while (i < input.length()) {
+            // Find longest prefix
             prefix = codes.getLongestPrefix(input, i);
-            // If the lookahead prefix doesn't appear in the codes
+            // Find associated code with prefix
             int code = codes.lookup(prefix);
+            // Write out the code
             BinaryStdOut.write(code, CODE_BITS);
+            // Increment start index by the length of the prefix
             i += prefix.length();
+            // Check to stay in bounds
             if (i >= input.length())
                 break;
+            // Insert new code into the TST then increment codeIndex value
             codes.insert(prefix+input.charAt(i), codeIndex++);
         }
+        // Write end of file and close
         BinaryStdOut.write(EOF, CODE_BITS);
         BinaryStdOut.close();
     }
 
     private static void expand() {
+        // Like decode and codes...get it?
+        String[] decodes = new String[(int) Math.pow(2, CODE_BITS)];
+        for (int i = 32; i < 256; i++) {
+            decodes[i] = (char) (i) + "";
+        }
+        int value = BinaryStdIn.readInt(CODE_BITS);
+        int codeIndex = EOF+1;
 
-        // TODO: Complete the expand() method
+        while (value != EOF) {
+            BinaryStdOut.write(decodes[value]);
+
+            int newVal = BinaryStdIn.readInt(CODE_BITS);
+            String s = decodes[newVal];
+            if (s == null) {
+                break;
+            }
+            decodes[codeIndex++] = decodes[value] + s.charAt(0);
+
+            value = newVal;
+        }
 
         BinaryStdOut.close();
     }
