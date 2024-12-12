@@ -44,10 +44,7 @@ public class TextCompressor {
 
         while (i < input.length()) {
             // Find longest prefix
-//            System.out.println("ehs;:");
-//            System.out.println(input.substring(i, i+100));
             prefix = codes.getLongestPrefix(input, i);
-//            System.out.println(prefix);
             // Find associated code with prefix
             int code = codes.lookup(prefix);
 
