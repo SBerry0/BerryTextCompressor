@@ -12,7 +12,7 @@ public class TST {
     private Node root;
 
     public TST() {
-        for (int i = 32; i < 256; i++) {
+        for (int i = 0; i < 256; i++) {
             insert((char) (i) + "", i);
         }
     }

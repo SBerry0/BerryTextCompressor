@@ -38,14 +38,19 @@ public class TextCompressor {
         TST codes = new TST();
 
         int codeIndex = EOF+1;
+        int maxCodeIndex = (int) Math.pow(2, CODE_BITS);
         int i = 0;
         String prefix;
 
         while (i < input.length()) {
             // Find longest prefix
+//            System.out.println("ehs;:");
+//            System.out.println(input.substring(i, i+100));
             prefix = codes.getLongestPrefix(input, i);
+//            System.out.println(prefix);
             // Find associated code with prefix
             int code = codes.lookup(prefix);
+
             // Write out the code
             BinaryStdOut.write(code, CODE_BITS);
             // Increment start index by the length of the prefix
@@ -54,7 +59,8 @@ public class TextCompressor {
             if (i >= input.length())
                 break;
             // Insert new code into the TST then increment codeIndex value
-            codes.insert(prefix+input.charAt(i), codeIndex++);
+            if (codeIndex < maxCodeIndex)
+                codes.insert(prefix+input.charAt(i), codeIndex++);
         }
         // Write end of file and close
         BinaryStdOut.write(EOF, CODE_BITS);
@@ -64,21 +70,29 @@ public class TextCompressor {
     private static void expand() {
         // Like decode and codes...get it?
         String[] decodes = new String[(int) Math.pow(2, CODE_BITS)];
-        for (int i = 32; i < 256; i++) {
+        for (int i = 0; i < 256; i++) {
             decodes[i] = (char) (i) + "";
         }
         int value = BinaryStdIn.readInt(CODE_BITS);
         int codeIndex = EOF+1;
+        int maxCodeIndex = (int) Math.pow(2, CODE_BITS);
 
         while (value != EOF) {
             BinaryStdOut.write(decodes[value]);
 
             int newVal = BinaryStdIn.readInt(CODE_BITS);
             String s = decodes[newVal];
+            for (int i = 129; i < 320; i++) {
+                System.out.println(decodes[i] + " - " + (i));
+            }
+//            System.out.println(newVal + " " + s + " " + decodes[newVal-1]);
             if (s == null) {
                 break;
             }
-            decodes[codeIndex++] = decodes[value] + s.charAt(0);
+            if (codeIndex < maxCodeIndex)
+                decodes[codeIndex++] = decodes[value] + s.charAt(0);
+//            System.out.println(value + " " + decodes[value] + " " + newVal + " " + decodes[value] + s.charAt(0));
+//            System.out.println("------------");
 
             value = newVal;
         }
